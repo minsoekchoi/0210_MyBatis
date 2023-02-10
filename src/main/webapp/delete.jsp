@@ -1,0 +1,99 @@
+<%@page import="com.ict.edu.DAO"%>
+<%@page import="com.ict.edu.VO"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+a {
+	text-decoration: none;
+}
+
+table {
+	width: 600px;
+	border-collapse: collapse;
+	text-align: center;
+}
+
+table, th, td {
+	border: 1px solid black;
+	padding: 3px
+}
+
+div {
+	width: 600px;
+	margin: auto;
+	text-align: center;
+}
+</style>
+<script type="text/javascript">
+	function delete_ok(f) {
+
+		// 여기서 가져온 idx를 이용해 pwd를 가져와야한다.
+		// delete_ok에서 getOneList 를 실행시켜 정보를 보냄
+		// 그럼 pwd가 오니까 비교 할수 있겠지??
+		// 그럼 무엇일까
+		<%
+		DAO dao = (DAO) session.getAttribute("dao");
+		VO vo = dao.getOneList(request.getParameter("idx"));
+
+		request.setAttribute("vo", vo);
+		
+		%>
+
+		// 비밀번호 
+		var k = "${vo.pwd}";
+		if (f.pwd.value == k) {
+			var chk = confirm("정말 삭제할까요?");
+			if (chk) {
+				f.action = "delete_ok.jsp"
+				f.submit();
+			} else {
+				history.go(-1);
+			}
+		} else {
+			alert("비밀번호 틀림");
+			f.pwd.value = "";
+			f.pwd.focus();
+			return;
+		}
+	}
+</script>
+</head>
+<body>
+
+	<div>
+		<h2>방명록 : 삭제화면</h2>
+		<hr>
+		<p>
+			[<a href="list.jsp">목록으로 이동</a>]
+		</p>
+		<form method="post">
+			<table>
+				<tbody>
+					<tr>
+						<th style="background-color: #99ccff">비밀번호</th>
+						<td><input type="password" name="pwd"></td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="2">
+							<input type="button" value="삭제" onclick="delete_ok(this.form)">
+							<input type="hidden" name="idx" value="${vo.idx}">
+						</td>
+					</tr>
+				</tfoot>
+			</table>
+		</form>
+	</div>
+
+	
+
+
+
+</body>
+</html>
